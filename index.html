@@ -1,21 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style>
-    .container {
-      width: 100vw;
-      height: 100vh;
-      display: flex; /* Default Axis is X*/
-      justify-content: center; /* Main Axis */
-      align-items: center; /* Cross Axis */
-    }
-    .indicator{
-      width: 50vw;
-    }
-    body{
-      background-color: #1E6CC7;
-    }
-</style>
   <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
@@ -46,96 +31,29 @@
 
   <title>Sistem Pertahanan Tubuh</title>
   <link rel="manifest" href="manifest.json">
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = '3794794779';
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
 </head>
 <body>
-  <!-- This script installs service_worker.js to provide PWA functionality to
-       application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
-  
-  <div id="loading_indicator" class="container">
-    <img class="indicator" src="assets/web_loading.gif" />
-  </div>
-  
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-
- <!-- Firebase Configuration -->
   <script>
-    var firebaseConfig = {
-      apiKey: "AIzaSyDrWD5gGvWfBMp75ERInTpH21iJZXvMwAU",
-      authDomain: "sistem-pertahanan-tubuh.firebaseapp.com",
-      projectId: "sistem-pertahanan-tubuh",
-      storageBucket: "sistem-pertahanan-tubuh.appspot.com",
-      messagingSenderId: "833919965229",
-      appId: "1:833919965229:web:b4bf8bd5a7ca5ca5eb80a4",
-      measurementId: "G-8VGTDPVDSE",
-    };
-   
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-  </script>
-  <script>
-    var serviceWorkerVersion = '306375543';
-    var scriptLoaded = false;
-    function loadMainDartJs() {
-      if (scriptLoaded) {
-        return;
-      }
-      scriptLoaded = true;
-      var scriptTag = document.createElement('script');
-      scriptTag.src = 'main.dart.js';
-      scriptTag.type = 'application/javascript';
-      document.body.append(scriptTag);
-    }
-
-    if ('serviceWorker' in navigator) {
-      // Service workers are supported. Use them.
-      window.addEventListener('load', function () {
-        // Wait for registration to finish before dropping the <script> tag.
-        // Otherwise, the browser will load the script multiple times,
-        // potentially different versions.
-        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
-        navigator.serviceWorker.register(serviceWorkerUrl)
-          .then((reg) => {
-            function waitForActivation(serviceWorker) {
-              serviceWorker.addEventListener('statechange', () => {
-                if (serviceWorker.state == 'activated') {
-                  console.log('Installed new service worker.');
-                  loadMainDartJs();
-                }
-              });
-            }
-            if (!reg.active && (reg.installing || reg.waiting)) {
-              // No active web worker and we have installed or are installing
-              // one for the first time. Simply wait for it to activate.
-              waitForActivation(reg.installing || reg.waiting);
-            } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
-              // When the app updates the serviceWorkerVersion changes, so we
-              // need to ask the service worker to update.
-              console.log('New service worker available.');
-              reg.update();
-              waitForActivation(reg.installing);
-            } else {
-              // Existing service worker is still good.
-              console.log('Loading app from service worker.');
-              loadMainDartJs();
-            }
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
           });
-
-        // If service worker doesn't succeed in a reasonable amount of time,
-        // fallback to plaint <script> tag.
-        setTimeout(() => {
-          if (!scriptLoaded) {
-            console.warn(
-              'Failed to load app from service worker. Falling back to plain <script> tag.',
-            );
-            loadMainDartJs();
-          }
-        }, 4000);
+        }
       });
-    } else {
-      // Service workers not supported. Just drop the <script> tag.
-      loadMainDartJs();
-    }
+    });
   </script>
 </body>
 </html>
